@@ -17,3 +17,7 @@ class ILayer(ABC):
         :return: resulting vector or matrix depending on the input
         """
         pass
+
+    @abstractmethod
+    def __str__(self):
+        pass

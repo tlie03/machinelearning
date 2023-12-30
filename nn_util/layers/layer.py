@@ -40,15 +40,9 @@ class Layer(ILayer):
         Bias is always added but the bias vector is zero if bias is set to False.
         """
         z = np.dot(self.weights, x) + self.biases
-        result = self.activation.eval(z)
+        return self.activation.eval(z)
 
-        if self.next_layer is not None:
-            return self.next_layer.forward(result)
-        return result
-
-    def append_layer(self, layer: ILayer):
-        self.next_layer = layer
+    def __str__(self):
+        return f'{self.name}: {self.input_shape} -> {self.output_shape} | {self.activation} | bias: {self.bias}'
 
 
-if __name__ == '__main__':
-    pass

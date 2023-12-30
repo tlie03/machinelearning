@@ -6,7 +6,7 @@ from nn_util.loss_functions.i_label_loss import ILabelLoss
 class MeanSquaredError(ILabelLoss):
 
     def loss(self, y_pred: np.ndarray, y_real: np.ndarray) -> float:
-        pass
+        return np.mean(np.square(y_pred - y_real))
 
     def loss_deriv(self, y_pred: np.ndarray, y_real: np.ndarray) -> np.ndarray:
-        pass
+        return 2 * (y_pred - y_real)

@@ -12,3 +12,6 @@ class Identity(IActivationFunction):
 
     def eval_deriv(self, x):
         return 1
+
+    def __str__(self):
+        return self.name
