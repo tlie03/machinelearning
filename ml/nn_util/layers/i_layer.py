@@ -2,9 +2,6 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 import numpy as np
 
-from nn_util.activation_functions.i_activation_function import IActivationFunction
-from nn_util.activation_functions.identity import Identity
-
 
 class ILayer(ABC):
 

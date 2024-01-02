@@ -1,4 +1,6 @@
-from nn_util.activation_functions.i_activation_function import IActivationFunction
+import numpy as np
+
+from .i_activation_function import IActivationFunction
 
 
 class Identity(IActivationFunction):
@@ -11,7 +13,7 @@ class Identity(IActivationFunction):
         return x
 
     def eval_deriv(self, x):
-        return 1
+        return np.ones(x.shape)
 
     def __str__(self):
         return self.name

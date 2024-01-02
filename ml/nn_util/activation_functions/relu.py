@@ -1,5 +1,5 @@
 import numpy as np
-from nn_util.activation_functions.i_activation_function import IActivationFunction
+from .i_activation_function import IActivationFunction
 
 
 class ReLu(IActivationFunction):

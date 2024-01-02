@@ -1,6 +1,6 @@
 import numpy as np
 
-from nn_util.loss_functions.i_label_loss import ILabelLoss
+from .i_label_loss import ILabelLoss
 
 
 class MeanSquaredError(ILabelLoss):

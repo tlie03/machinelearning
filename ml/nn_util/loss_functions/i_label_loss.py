@@ -21,7 +21,6 @@ class ILabelLoss(ABC):
         Evaluates the gradient of the loss function.
         :param y_pred: predicted label
         :param y_real: true label
-        :return: the derivative of the loss function w.r.t the predicted label
+        :return: the derivative of the loss function w.r.t the predicted value
         """
         pass
-
