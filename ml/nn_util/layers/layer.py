@@ -3,6 +3,9 @@ import numpy as np
 from .i_layer import ILayer
 from ml.nn_util.activation_functions.i_activation_function import IActivationFunction
 from ml.nn_util.activation_functions.identity import Identity
+from ml.nn_util.weight_generators.i_weight_generator import IWeightGenerator
+from ml.nn_util.weight_generators.uniform_weights import UniformWeights
+from ml.nn_util.weight_generators.constant_weigths import ConstantWeights
 
 
 class Layer(ILayer):
@@ -12,7 +15,8 @@ class Layer(ILayer):
                  output_shape: int,
                  activation: IActivationFunction = Identity(),
                  bias: bool = False,
-                 name: str = 'layer'
+                 weight_generator: IWeightGenerator = UniformWeights(),
+                 name: str = 'layer',
                  ):
 
         self.name = name
@@ -26,14 +30,13 @@ class Layer(ILayer):
         self.activation = activation
         self.bias = bias
 
-
-        # todo change so that values will be set by some kind of weight generator
-        # values that will be adjusted during training
-        self.weights = np.random.uniform(-1, 1, (output_shape, input_shape))
+        # set the weights and biases that will be adjusted during training
+        self.weights = weight_generator.generate((output_shape, input_shape))
         if bias:
-            self.biases = np.random.uniform(-1, 1, (output_shape, 1))
+            self.biases = weight_generator.generate((output_shape, 1))
         else:
-            self.biases = np.zeros((output_shape, 1))
+            zero_weight_generator = ConstantWeights(0)
+            self.biases = zero_weight_generator.generate((output_shape, 1))
 
     def forward(self, x: np.ndarray) -> np.ndarray:
         """

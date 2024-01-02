@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List
 import numpy as np
 
 from ml.nn_util import ILayer
@@ -7,11 +7,8 @@ from ml.np_util import shape_fill_none
 
 class NeuralNetwork:
 
-    def __init__(self, layers: List[ILayer], seed: int = None):
+    def __init__(self, layers: List[ILayer]):
         self.layers = layers
-        self.seed = seed
-
-
 
     def forward(self, x: np.array) -> np.array:
         # reshape input data so that each datapoint is a column vector in the matrix
@@ -32,10 +29,6 @@ class NeuralNetwork:
         else:
             x = x.T
         return x
-
-
-    def backprop(self, loss_deriv: np.array) -> List[Tuple[np.array, np.array]]:
-        pass
 
     def __str__(self):
         return '\n'.join([str(layer) for layer in self.layers])

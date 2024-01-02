@@ -12,6 +12,7 @@ nn_util = [
     "ReLu",
     "IWeightGenerator",
     "UniformWeights",
+    "ConstantWeights",
     "NeuralNetwork"
 ]
 

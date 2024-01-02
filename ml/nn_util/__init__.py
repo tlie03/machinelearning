@@ -13,6 +13,7 @@ from .activation_functions import (
 from .weight_generators import (
     IWeightGenerator,
     UniformWeights,
+    ConstantWeights
 )
 
 from .neural_network import NeuralNetwork
@@ -40,6 +41,7 @@ activation_functions = [
 weight_generators = [
     "IWeightGenerator",
     "UniformWeights",
+    "ConstantWeights"
 ]
 
 __all__ = neural_network + loss_functions + layers + activation_functions + weight_generators
