@@ -1,1 +1,1 @@
-This repository documents my attempt to implement my own machine learning framework from scratch.
+This repository documents my attempt to implement a machine learning framework from scratch.
