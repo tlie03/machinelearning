@@ -1,65 +1,66 @@
-from __future__ import annotations
-from typing import List
 from abc import ABC, abstractmethod
-import numpy as np
+from typing import List
 
-from .port import Port
+from ml.computational_graph.port import Port
+
 
 
 class Node(ABC):
     """
     A node in a computational graph.
-    The node has input ports and output ports.
-    The input ports are defined in the concrete nodes that are defined and the input ports are created
-    and connected to the node if the node is created.
-    The mathematical operation that is performed by the node defines the number of input ports.
-    The output ports can be dynamically connected to the nodes.
-    The result that is calculated by the node can be streamed to any number of output ports.
+    A node can have any number of input ports and output ports.
+    In the concrete subclasses, the nodes that provide the inputs for the computation must be passed to the
+    constructor. In the constructor the ports are created and connected to the node. Thus, establishing the
+    connections between the nodes.
+    Each Node has exactly one output value that is streamed to the output ports.
+    Furthermore, the gradients that are queried from the output ports have all the same shape.
+    Thus, the shape of the output value and the output gradient is defined in the abstract class.
+    The shapes of the value and gradient of the input ports must be defined in each concrete subclass, since
+    the number of input ports can vary.
     """
 
-    def __init__(self, name: str = "Node"):
+    def __init__(self, name: str = "Node", output_value_shape: tuple = None, output_grad_shape: tuple = None):
+        """
+        Initialize the node with the name.
+        :param name: name of the node
+        :param output_value_shape: shape of the value that is streamed to the output ports
+        :param output_grad_shape: shape of the gradient that is queried from the output ports
+        """
         self.name: str = name
         self.output_ports: List[Port] = []
+        self.output_value_shape: tuple = output_value_shape
+        self.output_grad_shape: tuple = output_grad_shape
 
-    def forward(self):
+    def get_name(self) -> str:
         """
-        Since the result is same for all output ports it can be calculated once
-        and is then streamed to all output ports.
-        :return the value for all output ports should be set
+        Get the name of the node.
+        :return: name of the node
         """
-        result = self.calc_result()
-        for ports in self.output_ports:
-            ports.set_value(result)
+        return self.name
 
     @abstractmethod
-    def calc_result(self) -> np.ndarray:
+    def forward(self):
         """
-        Calculate the result of the node.
-        Gets all the necessary values from the input ports and returns the result.
-        The implementation is highly dependent on the concrete node.
-        :return: result for the node that should be streamed to all output ports
+        Calculate the result of the node based on the values of the input ports.
+        The result is written to the output ports via the set_value method.
         """
         pass
 
     @abstractmethod
     def backward(self):
         """
-        Takes the gradients from all output ports and calculates the gradients for the input ports.
-        Thus, the gradients are streamed back to the input ports.
-        Since the number of input ports is defined by the concrete node, the implementation is highly dependent on the
-        concrete node. Furthermore, the gradients that are calculated usually differ from input port to input port.
-        Thus, an individual gradient calculation is necessary for each input port.
-        :return: gradients for all input ports should be set
+        Calculate the gradient of the node based on the gradients of the output ports.
+        The gradient is written to the input ports via the set_grad method.
+        Usually a different gradient is calculated for each input port.
         """
         pass
 
-    def connect_to_output(self, port: Port):
+    def _add_output_port(self, port: Port):
         """
-        Connect a given port to the output of the node.
-        Thus, the output of that node is streamed to the given port.
-        This Node will therefore be the source of the given port.
-        :param port: the port that should be connected to the output of the node:
-        :return: The node should be connected to the source of the given port
+        Add an output port to the node.
+        The when a new result is calculated it will be streamed to the output port.
+        This method should only be called in the constructor of a different node, where the connection via the port
+        is established.
+        :param port: new output port that will receive the results
         """
-        port.set_source(self)
         self.output_ports.append(port)
